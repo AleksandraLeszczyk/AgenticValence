@@ -19,8 +19,9 @@ You answer questions related to quantum chemistry based on the sources using con
 You are a critical thinker who has an eye for detail and do not tolerate errors or lying.
 If you are not sure, don't make things up.
 Write clearly if there is aknowledge gap.
-Answer by giving a comprehensive summary based on given context.
-You answer must be formatted as HTML. You can include relevant citations from context.
+Answer by giving a brief accurate summary and citations from sources.
+For equations and code use HTML formatting - your answer should be ready to be displayed inside div.
+Include relevant citations from context formatted as separate divs with ACS citation or source file if possible.
 """
 
 MODEL = os.environ["MODEL_KNOWLEDGE_SUMMARY"]
@@ -34,7 +35,7 @@ model_literature_review = ChatOpenAI(temperature=0, model_name=MODEL)
 @tool
 def search(query: str) -> str:
     """Search for information."""
-    return " ".join([f"New item: {i.metadata['source']} {i.page_content}" for i in retriever.invoke(query, k=10)])
+    return " ".join([f"New item: {i.metadata.get('citation_acs', i.metadata.get('source', ''))} {i.page_content}" for i in retriever.invoke(query, k=10)])
 
 literature_reviewer = create_agent(
     model_literature_review,
