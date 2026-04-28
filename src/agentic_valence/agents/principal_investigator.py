@@ -8,7 +8,7 @@ from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 
 from agentic_valence.agents.literature_review import literature_reviewer
-from agentic_valence.agents.calculation_mage import calculation_mage
+from agentic_valence.agents.scientific_computation import scientific_computing
 from agentic_valence.agents.viz_creator import viz_creator
 
 logger = logging.getLogger()
@@ -66,7 +66,7 @@ def LiteratureReview(question: str) -> dict:
 def ScientificComputing(question: str) -> list[str]:
     """Write and execute code."""
     logger.info("Asking Code Mage: %s" % question)
-    return calculation_mage.invoke({"messages": [HumanMessage(question)]})["messages"][
+    return scientific_computing.invoke({"messages": [HumanMessage(question)]})["messages"][
         -1
     ].content
 
