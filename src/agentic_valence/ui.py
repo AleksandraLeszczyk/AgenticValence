@@ -6,7 +6,7 @@ import gradio as gr
 from dotenv import load_dotenv
 
 from agentic_valence.main import chat_with_principal_investigator
-from agentic_valence.style.html_elements import get_css_style_header
+from agentic_valence.style.html_elements import CSS_STYLE_HEADER
 
 load_dotenv(override=True)
 
@@ -35,9 +35,10 @@ def main():
                 event_html = gr.HTML(
                     label="Computational Details",
                     value="Research steps and figures will appear here.",
-                    css_template=get_css_style_header(),
+                    css_template=CSS_STYLE_HEADER,
                     container=True,
-                    height=600,
+                    height=650,
+                    max_height=650,
                 )
 
         message.submit(
