@@ -39,7 +39,7 @@ CODE_DB_NAME = os.environ["CODE_DB_NAME"]
 mcp = FastMCP("ScientificComputation", json_response=True)
 
 
-PROMPT_CALCULATION_MAGE = """
+PROMPT_SCIENTIFIC_COMPUTING = """
 You are a python developer specialized in quantum chemistry.
 You find answers to user's questions by writing code, executing it, and analysing output.
 You answer in html format.
@@ -147,10 +147,10 @@ def quick_ccsd(molecule_xyz: str, code: str) -> dict:
 embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 vectordb = Chroma(persist_directory=CODE_DB_NAME, embedding_function=embeddings)
 retriever = vectordb.as_retriever()
-model_calculation_mage = ChatOpenAI(temperature=0, model_name=MODEL)
+model_scientific_computing = ChatOpenAI(temperature=0, model_name=MODEL)
 
-calculation_mage = create_agent(
-    model_calculation_mage,
+scientific_computing = create_agent(
+    model_scientific_computing,
     tools=[
         search_code,
         execute_code_via_mcp,
@@ -160,7 +160,7 @@ calculation_mage = create_agent(
         content=[
             {
                 "type": "text",
-                "text": PROMPT_CALCULATION_MAGE,
+                "text": PROMPT_SCIENTIFIC_COMPUTING,
             }
         ]
     ),

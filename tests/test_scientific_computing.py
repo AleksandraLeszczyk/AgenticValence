@@ -1,12 +1,12 @@
 import logging
 from langchain_core.messages import HumanMessage, AIMessage, ToolMessage
-from agentic_valence.agents.calculation_mage import calculation_mage
+from agentic_valence.agents.scientific_computation import scientific_computing
 
 logger = logging.getLogger()
 
 
-def test_calculation_mage_search_code():
-    messages = calculation_mage.invoke(
+def test_scientific_computing_search_code():
+    messages = scientific_computing.invoke(
         {"messages": [HumanMessage("Write a code snippet that computes ground state energy of water.")]}
     )["messages"]
     logger.info("Calculation Mage answered: %s" % messages)
@@ -18,8 +18,8 @@ def test_calculation_mage_search_code():
     assert "search_code" in tools_called
 
 
-def test_calculation_mage_compute():
-    messages = calculation_mage.invoke(
+def test_scientific_computing_compute():
+    messages = scientific_computing.invoke(
         {"messages": [HumanMessage("Compute PES of H2 using CCSD and cc-pvdz basis.")]}
     )
     logger.info("Calculation Mage answered: %s" % messages)
