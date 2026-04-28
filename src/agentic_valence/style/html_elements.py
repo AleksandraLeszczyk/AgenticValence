@@ -5,32 +5,38 @@ import json
 from langchain.messages import AIMessage, ToolMessage
 
 
-def get_css_style_header():
-    return """<style>
+CSS_STYLE_HEADER = """<style>
+        .milestone {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #fafafa;
+        }
+        .milestone summary {
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .milestone ul {
+            margin-top: 8px;
+        }
         .event-container { 
             word-wrap: break-word; 
             overflow-wrap: break-word; 
             white-space: normal;
             font-family: sans-serif;
             margin-bottom: 15px;
-            display: none;
-            overflow: hidden;
+            border: 1px solid #bbf7d0; 
+            padding: 12px; 
+            border-radius: 8px; 
         }
         .code-block {
             white-space: pre-wrap; 
             word-break: break-all;
-            background: rgba(0,0,0,0.05);
             padding: 8px;
             border-radius: 4px;
             font-size: 0.9em;
-        }
-        .active, .collapsible:hover {
-            background-color: #ccc;
-            }
-        @media (prefers-color-scheme: dark) {
-            .code-block { background: rgba(255,255,255,0.1); color: #e5e7eb; }
-            .tool-call { border-left-color: #60a5fa !important; }
-            .tool-response { background: #064e3b !important; border-color: #059669 !important; color: #ecfdf5; }
         }
     </style>
     """
@@ -39,10 +45,9 @@ def format_event_panel(new_event: AIMessage | ToolMessage, old_event_panel: str)
 
     # Get clean events
     new_event_html = parse_event_to_html(new_event)
-    if not new_event_html.replace("<br>", ""):
-        return old_event_panel
-    out = f"""<br>{new_event_html}<br> {old_event_panel}"""
-    return out
+    if new_event_html:
+        return f"""{old_event_panel}<br>{new_event_html}"""
+    return old_event_panel
 
 
 def parse_event_to_html(event: AIMessage | ToolMessage) -> str:
@@ -59,23 +64,22 @@ def parse_event_to_html(event: AIMessage | ToolMessage) -> str:
         tool_calls = getattr(event, "tool_calls", [])
         if isinstance(content, str):
             if not content.startswith("#"):
-                html_output += (
-                    f'<div class="event-container tool-call" style="border-left: 4px solid #3b82f6; padding-left: 12px;">'
-                    f"<b>🛠️ Action: thinking</b><br>"
-                    f'{content}'
-                    f"</div>"
-                )
+                html_output += f"""<div class="milestone">
+                        <details>
+                            <summary>🧠 Strategizing</summary>
+                            <ul>{content}</ul>
+                        </details>
+                    </div>"""
         if tool_calls:
             for tc in tool_calls:
                 name = html.escape(tc.get("name", "unknown"))
                 args = html.escape(json.dumps(tc.get("args", {}), indent=2))
-
-                html_output += (
-                    f'<div class="event-container tool-call" style="border-left: 4px solid #3b82f6; padding-left: 12px;">'
-                    f"<b>🛠️ Action: calling <code>{name}</code></b><br>"
-                    f'<b>Task:</b><pre class="code-block"><code>{args}</code></pre>'
-                    f"</div>"
-                )
+                html_output += f"""<div class="milestone">
+                        <details>
+                            <summary>🛠️ Action: <code>{name}</code></summary>
+                            <ul><b>Task:</b><pre class="code-block"><code>{args}</code></pre></ul>
+                        </details>
+                    </div>"""
 
 
     if msg_type == "ToolMessage":
@@ -89,19 +93,18 @@ def parse_event_to_html(event: AIMessage | ToolMessage) -> str:
             ])
 
             html_output = (
-                f'<div class="event-container tool-response" style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 8px; color: #166534;">'
+                f'<div class="event-container">'
                 f'<h4 style="margin: 0 0 8px 0;">🎨 Figure {len(figures)}</h4>'
                 f"""<iframe src="gradio_api/file/artifacts/{figures[-1]}" width="100%" height="500px"></iframe>"""
                 f"</div>"
             )
 
         else:
-            # Other tool responses
-            html_output = (
-                f'<div class="event-container tool-response" style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 8px; color: #166534;">'
-                f'<h4 style="margin: 0 0 8px 0;">🧱 <code>{name}</code> results</h4>'
-                f'<div style="line-height: 1.5;">{content}</div>'
-                f"</div>"
-            )
+            html_output += f"""<div class="milestone">
+                        <details>
+                            <summary>🧱 <code>{name}</code> results</summary>
+                            <ul>{content}</ul>
+                        </details>
+                    </div>"""
 
     return f"{html_output.strip()}" if html_output else ""
