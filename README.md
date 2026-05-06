@@ -61,7 +61,6 @@ MacOS and Linux
   uv venv --python 3.12 
   source .venv/bin/activate
   uv pip install .
-  python src/agentic_valence/ui.py
 ```
 
 5. Run user interface
