@@ -42,11 +42,7 @@ MODEL_VIZ_CREATOR=gpt-5.4-mini
 MCP_SERVER_URL=http://your-mcp-server:8080/execute  
 ```
 
-2. Set up knowledge database
-
-Populate the directory knowledge_base/books and knowledge_base/articles with your collection and run:
-
-```python src/agentic_valence/scripts/knowledge_db_setup.py```
+2. Set up knowledge database [QuantumMoleculesDB](https://github.com/AleksandraLeszczyk/QuantumMoleculesDB)
 
 3. Set up code database
 
