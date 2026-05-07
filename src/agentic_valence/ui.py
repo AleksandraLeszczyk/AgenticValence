@@ -1,4 +1,3 @@
-
 import os
 import shutil
 
@@ -23,8 +22,10 @@ def main():
         with gr.Row():
             with gr.Column(scale=1):
                 chatbot = gr.Chatbot(
-                    label="💬 Lab", height=600,
-                    latex_delimiters=[{ "left": "$$", "right": "$$", "display": False}]) 
+                    label="💬 Lab",
+                    height=600,
+                    latex_delimiters=[{"left": "$$", "right": "$$", "display": False}],
+                )
                 message = gr.Textbox(
                     label="Research Project",
                     placeholder="Ask anything about quantum chemistry...",
@@ -46,12 +47,18 @@ def main():
             inputs=[message, chatbot],
             outputs=[message, chatbot],
         ).then(
-            chat_with_principal_investigator, 
-            inputs=[chatbot, event_html], 
-            outputs=[chatbot, event_html]
+            chat_with_principal_investigator,
+            inputs=[chatbot, event_html],
+            outputs=[chatbot, event_html],
         )
 
-    ui.launch(inbrowser=True, allowed_paths=["artifacts"])
+    ui.launch(
+        inbrowser=True,
+        allowed_paths=["artifacts"],
+        show_api=False,
+        server_name="0.0.0.0",
+        server_port=7860,
+    )
 
 
 def clean_artifacts():
