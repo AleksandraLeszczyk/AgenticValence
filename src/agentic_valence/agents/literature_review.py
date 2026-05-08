@@ -10,6 +10,8 @@ from langchain_core.documents import Document
 
 from dotenv import load_dotenv
 
+from agentic_valence.config import CONFIG
+
 
 load_dotenv(override=True)
 
@@ -24,13 +26,10 @@ For equations and code use HTML formatting - your answer should be ready to be d
 Include relevant citations from context formatted as separate divs with ACS citation or source file if possible.
 """
 
-MODEL = os.environ["MODEL_KNOWLEDGE_SUMMARY"]
-DB_NAME = os.environ["DB_NAME"]
-
-embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-vectordb = Chroma(persist_directory=DB_NAME, embedding_function=embeddings)
+embeddings = HuggingFaceEmbeddings(model_name=CONFIG["MODEL_EMBEDDING"])
+vectordb = Chroma(persist_directory=os.environ["DB_NAME"], embedding_function=embeddings)
 retriever = vectordb.as_retriever()
-model_literature_review = ChatOpenAI(temperature=0, model_name=MODEL)
+model_literature_review = ChatOpenAI(temperature=0, model_name=CONFIG["MODEL_KNOWLEDGE_SUMMARY"])
 
 @tool
 def search(query: str) -> str:

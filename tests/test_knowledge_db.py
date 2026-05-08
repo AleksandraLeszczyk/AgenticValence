@@ -3,6 +3,7 @@ import logging
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from agentic_valence.scripts.knowledge_db_setup import fetch_documents, create_chunks, create_vector_database
+from agentic_valence.config import CONFIG
 
 logger = logging.getLogger()
 
@@ -20,7 +21,7 @@ def test_set_db(tmp_path):
     create_vector_database(chunks, test_db_name)
 
     logger.info("Trying to retrieve something from db.")
-    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+    embeddings = HuggingFaceEmbeddings(model_name=CONFIG["MODEL_EMBEDDING"])
     vectordb = Chroma(persist_directory=test_db_name, embedding_function=embeddings)
     retriever = vectordb.as_retriever()
     context = retriever.invoke("What is a difference between pCCD and RHF orbitals?", k=2)

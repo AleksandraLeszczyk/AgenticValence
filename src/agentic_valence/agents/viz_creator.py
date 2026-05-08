@@ -1,9 +1,8 @@
 import logging
 import os
-from typing import Any, Literal, Union
+from typing import Literal, Union
 import shutil
 
-import numpy as np
 from langchain.tools import tool
 from langchain_openai import ChatOpenAI
 from langchain.agents import create_agent
@@ -11,11 +10,12 @@ from langchain_core.messages import SystemMessage
 import pandas as pd
 import plotly.express as px
 
+from agentic_valence.config import CONFIG
 
 logger = logging.getLogger()
 
 # In a real environment, this URL would point to your actual MCP server
-MODEL = os.environ["MODEL_VIZ_CREATOR"]
+MODEL = CONFIG["MODEL_VIZ_CREATOR"]
 
 
 PROMPT_VIZ_CREATOR = """

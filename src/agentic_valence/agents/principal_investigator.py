@@ -1,5 +1,4 @@
 import logging
-import os
 
 from langchain.tools import tool
 from langchain.agents import create_agent
@@ -10,6 +9,8 @@ from dotenv import load_dotenv
 from agentic_valence.agents.literature_review import literature_reviewer
 from agentic_valence.agents.scientific_computation import scientific_computing
 from agentic_valence.agents.viz_creator import viz_creator
+from agentic_valence.config import CONFIG
+
 
 logger = logging.getLogger()
 load_dotenv(override=True)
@@ -79,7 +80,7 @@ def VizCreator(question: str) -> list[str]:
 
 
 model_principal_investigator = ChatOpenAI(
-    model=os.environ["MODEL_PRINCIPAL_INVESTIGATOR"]
+    model=CONFIG["MODEL_PRINCIPAL_INVESTIGATOR"]
 )
 principal_investigator = create_agent(
     model_principal_investigator,

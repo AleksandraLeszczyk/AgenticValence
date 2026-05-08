@@ -28,12 +28,13 @@ from pybest.part import get_mulliken_operators
 from pybest.wrappers import RHF
 
 from agentic_valence.agents.dev_assets.pybest_example_output import mock_pybest_h2
+from agentic_valence.config import CONFIG
 
 logger = logging.getLogger()
 
 # In a real environment, this URL would point to your actual MCP server
 MCP_SERVER_URL = os.environ.get("MCP_SERVER_URL", "not_available")
-MODEL = os.environ["MODEL_CODE_WRITING"]
+MODEL = CONFIG["MODEL_CODE_WRITING"]
 CODE_DB_NAME = os.environ["CODE_DB_NAME"]
 
 mcp = FastMCP("ScientificComputation", json_response=True)
