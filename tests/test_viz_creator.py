@@ -2,7 +2,7 @@ import logging
 import os
 
 from langchain_core.messages import HumanMessage, AIMessage
-from agentic_valence.agents.viz_creator import viz_creator, figure_registry
+from agentic_valence.agents.viz_creator import viz_creator
 
 logger = logging.getLogger()
 

@@ -1,12 +1,12 @@
 import logging
 from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
-from agentic_valence.agents.principal_investigator import principal_investogator
+from agentic_valence.agents.principal_investigator import principal_investigator 
 
 logger = logging.getLogger()
 
 
 def test_principal_investigator():
-    messages = principal_investogator.invoke(
+    messages = principal_investigator.invoke(
         {"messages": [HumanMessage("What are best orbitals for heavy-element containing molecules?")]}
     )
     used_tool = False # not yet
