@@ -30,15 +30,9 @@ This system automates the scientific workflow: from literature retrieval to live
 This setup is mostly for simple testing, better models are recommended.
 
 ```
-HF_TOKEN=
 OPENAI_API_KEY=
-DB_NAME=knowledge_db  # Name of directory for database with papers
+KNOWLEDGE_DB_HOST=knowledge_db  # Where database is hosted
 CODE_DB_NAME=code_db  # Name of directory for database for code snippets
-MODEL_EMBEDDING=all-MiniLM-L6-v2
-MODEL_KNOWLEDGE_SUMMARY=gpt-4.1-nano
-MODEL_CODE_WRITING=gpt-5.4-mini
-MODEL_PRINCIPAL_INVESTIGATOR=gpt-5.4-mini
-MODEL_VIZ_CREATOR=gpt-5.4-mini
 MCP_SERVER_URL=http://your-mcp-server:8080/execute  
 ```
 
@@ -61,5 +55,5 @@ MacOS and Linux
 
 5. Run user interface
 ```
-  python src/agentic_valence/ui.py
+  uv run src/agentic_valence/ui.py
 ```
