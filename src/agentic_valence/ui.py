@@ -55,7 +55,6 @@ def main():
     ui.launch(
         inbrowser=True,
         allowed_paths=["artifacts"],
-        show_api=False,
         server_name="0.0.0.0",
         server_port=7860,
     )
