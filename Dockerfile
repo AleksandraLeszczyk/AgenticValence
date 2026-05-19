@@ -1,12 +1,13 @@
 FROM python:3.12-slim
 
+RUN python -m pip install --upgrade pip
 WORKDIR /app
 
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-COPY . .
+COPY src /app/src
+COPY ./pyproject.toml /app/pyproject.toml
+COPY requirements.txt /app/requirements.txt
+RUN python -m pip install /app
 
 EXPOSE 7860
 
-CMD ["python", "src/agentic_valence/ui.py"]
+CMD ["python", "/app/src/agentic_valence/ui.py"]
