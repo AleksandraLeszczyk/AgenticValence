@@ -1,11 +1,9 @@
-import httpx
 import logging
 import os
-import re
 
 from langchain.tools import tool
 from langchain_chroma import Chroma
-from langchain_huggingface import HuggingFaceEmbeddings
+# from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_openai import ChatOpenAI
 from langchain.agents import create_agent
 from langchain_core.messages import SystemMessage 
@@ -67,24 +65,23 @@ def execute_code_via_mcp(code: str) -> str:
         return f"Execution Error: {str(e)}"
 
 
-@tool
-def search_code(query: str) -> list[str]:
-    """Search for code snippets and docs."""
-    logger.info(f"Searching code: {query}")
-    return retriever.invoke(query, k=10)
+# @tool
+# def search_code(query: str) -> list[str]:
+#     """Search for code snippets and docs."""
+#     logger.info(f"Searching code: {query}")
+#     return retriever.invoke(query, k=10)
 
 
-embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-vectordb = Chroma(persist_directory=CODE_DB_NAME, embedding_function=embeddings)
-retriever = vectordb.as_retriever()
+# embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+# vectordb = Chroma(persist_directory=CODE_DB_NAME, embedding_function=embeddings)
+# retriever = vectordb.as_retriever()
 model_scientific_computing = ChatOpenAI(temperature=0, model_name=MODEL)
 
 scientific_computing = create_agent(
     model_scientific_computing,
     tools=[
-        search_code,
+        # search_code,
         execute_code_via_mcp,
-        # quick_ccsd,
         ],
     system_prompt=SystemMessage(
         content=[
