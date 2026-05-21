@@ -17,7 +17,7 @@ logger = logging.getLogger()
 # In a real environment, this URL would point to your actual MCP server
 MCP_SERVER_URL = os.environ.get("MCP_SERVER_URL", "not_available")
 MODEL = CONFIG["MODEL_CODE_WRITING"]
-CODE_DB_NAME = os.environ["CODE_DB_NAME"]
+CODE_DB_NAME = os.environ.get("CODE_DB_NAME", "code-db")
 
 mcp = FastMCP("ScientificComputation", json_response=True)
 
