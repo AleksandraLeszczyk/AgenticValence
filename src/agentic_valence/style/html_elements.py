@@ -21,18 +21,22 @@ CSS_STYLE_HEADER = """<style>
         .milestone ul {
             margin-top: 8px;
         }
-        .event-container { 
-            word-wrap: break-word; 
-            overflow-wrap: break-word; 
+        .event-container {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
             white-space: normal;
             font-family: sans-serif;
             margin-bottom: 15px;
-            border: 1px solid #bbf7d0; 
-            padding: 12px; 
-            border-radius: 8px; 
+            border: 1px solid #bbf7d0;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        .event-container.error {
+            border-color: #fca5a5;
+            background-color: #fff1f2;
         }
         .code-block {
-            white-space: pre-wrap; 
+            white-space: pre-wrap;
             word-break: break-all;
             padding: 8px;
             border-radius: 4px;
@@ -85,8 +89,18 @@ def parse_event_to_html(event: AIMessage | ToolMessage) -> str:
     if msg_type == "ToolMessage":
         # Escape the name for safety, but allow 'content' to render as raw HTML
         name = html.escape(getattr(event, "name", "Expert"))
+        is_error = getattr(event, "status", "success") == "error"
 
-        if name == "VizCreator":
+        if is_error:
+            escaped_content = html.escape(content if isinstance(content, str) else str(content))
+            html_output += (
+                f'<div class="event-container error">'
+                f'<h4 style="margin: 0 0 8px 0; color: #b91c1c;">⚠️ <code>{name}</code> failed</h4>'
+                f'<pre class="code-block">{escaped_content}</pre>'
+                f"</div>"
+            )
+
+        elif name == "VizCreator":
             figures = sorted([
                 i for i in os.listdir("artifacts")
                 if i.startswith("fig") and (i.endswith("html") or i.endswith("png"))
