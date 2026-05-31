@@ -1,7 +1,6 @@
 import logging
 import os
 from typing import Literal, Union
-import shutil
 
 from langchain.tools import tool
 from langchain_openai import ChatOpenAI
@@ -12,23 +11,11 @@ import plotly.express as px
 
 from agentic_valence.config import settings
 from agentic_valence.prompts import load_prompt
+from agentic_valence.session import artifact_dir as _artifact_dir_var
 
 logger = logging.getLogger()
 
 PROMPT_VIZ_CREATOR = load_prompt("viz_creator")
-
-
-
-def clean_artifacts():
-    if not os.path.exists("artifacts"):
-        os.mkdir("artifacts")
-    else:
-        # Move old artifacts
-        items = [i for i in os.listdir("artifacts")]
-        old_artifact_dirs = [i for i in os.listdir(".") if i.startswith("artifacts_")]
-        if items:
-            a = max([0] + [int(i.split("_")[-1]) for i in old_artifact_dirs])
-            shutil.move("artifacts", f"artifacts_{a+1}")
 
 
 
@@ -101,10 +88,10 @@ def create_interactive_plot(
             hovermode="x unified",
             legend=dict(orientation="h", yanchor="bottom", y=1.02),
         )
-        # Save to artifacts
-        clean_artifacts()
-        figures = [i for i in os.listdir("artifacts") if i.startswith("fig") and i.endswith("png")]
-        fig.write_html(f"artifacts/fig{len(figures)}.html")
+        out_dir = _artifact_dir_var.get()
+        os.makedirs(out_dir, exist_ok=True)
+        figures = [f for f in os.listdir(out_dir) if f.startswith("fig") and f.endswith(".html")]
+        fig.write_html(os.path.join(out_dir, f"fig{len(figures)}.html"))
         return True
     
     except Exception:

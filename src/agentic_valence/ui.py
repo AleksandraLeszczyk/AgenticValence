@@ -1,5 +1,5 @@
 import os
-import shutil
+import uuid
 
 import gradio as gr
 
@@ -10,6 +10,12 @@ from agentic_valence.style.html_elements import CSS_STYLE_HEADER
 # and validates settings, so no explicit load_dotenv() is needed here.
 
 
+def _new_session_artifact_dir() -> str:
+    path = os.path.join("artifacts", str(uuid.uuid4()))
+    os.makedirs(path, exist_ok=True)
+    return path
+
+
 def main():
     def put_message_in_chatbot(message, history):
         return "", history + [{"role": "user", "content": message}]
@@ -18,6 +24,9 @@ def main():
 
     with gr.Blocks(title="AgenticValence", theme=theme) as ui:
         gr.Markdown("## 🏢 Quantum Chemistry Lab")
+
+        # One artifact directory per browser session, created on first load.
+        session_artifact_dir = gr.State(_new_session_artifact_dir)
 
         with gr.Row():
             with gr.Column(scale=1):
@@ -48,7 +57,7 @@ def main():
             outputs=[message, chatbot],
         ).then(
             chat_with_principal_investigator,
-            inputs=[chatbot, event_html],
+            inputs=[chatbot, event_html, session_artifact_dir],
             outputs=[chatbot, event_html],
         )
 
@@ -60,18 +69,6 @@ def main():
     )
 
 
-def clean_artifacts():
-    if not os.path.exists("artifacts"):
-        os.mkdir("artifacts")
-    else:
-        # Move old artifacts
-        items = [i for i in os.listdir("artifacts")]
-        old_artifact_dirs = [i for i in os.listdir(".") if i.startswith("artifacts_")]
-        if items:
-            a = max([0] + [int(i.split("_")[-1]) for i in old_artifact_dirs])
-            shutil.move("artifacts", f"artifacts_{a+1}")
-
-
 if __name__ == "__main__":
-    clean_artifacts()
+    os.makedirs("artifacts", exist_ok=True)
     main()

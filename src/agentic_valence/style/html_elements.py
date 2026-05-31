@@ -4,6 +4,8 @@ import html
 import json
 from langchain.messages import AIMessage, ToolMessage
 
+from agentic_valence.session import artifact_dir as _artifact_dir_var
+
 
 CSS_STYLE_HEADER = """<style>
         .milestone {
@@ -101,15 +103,16 @@ def parse_event_to_html(event: AIMessage | ToolMessage) -> str:
             )
 
         elif name == "VizCreator":
+            out_dir = _artifact_dir_var.get()
             figures = sorted([
-                i for i in os.listdir("artifacts")
-                if i.startswith("fig") and (i.endswith("html") or i.endswith("png"))
+                f for f in os.listdir(out_dir)
+                if f.startswith("fig") and (f.endswith(".html") or f.endswith(".png"))
             ])
 
             html_output = (
                 f'<div class="event-container">'
                 f'<h4 style="margin: 0 0 8px 0;">🎨 Figure {len(figures)}</h4>'
-                f"""<iframe src="gradio_api/file/artifacts/{figures[-1]}" width="100%" height="500px"></iframe>"""
+                f'<iframe src="gradio_api/file/{out_dir}/{figures[-1]}" width="100%" height="500px"></iframe>'
                 f"</div>"
             )
 

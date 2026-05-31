@@ -3,11 +3,14 @@ import html
 from langchain.messages import AIMessage, HumanMessage, SystemMessage
 
 from agentic_valence.agents.principal_investigator import principal_investigator
+from agentic_valence.session import artifact_dir as _artifact_dir_var
 from agentic_valence.style.html_elements import format_event_panel
 
 
 def chat_with_principal_investigator(
-    history: list[dict], research_progress: str = "🔬 Research Progress\n"
+    history: list[dict],
+    research_progress: str = "🔬 Research Progress\n",
+    artifacts_dir: str = "artifacts/default",
 ):
     """
     Generator function that streams agent events to the Gradio UI.
@@ -29,6 +32,9 @@ def chat_with_principal_investigator(
             langchain_messages.append(AIMessage(content=text))
         elif msg["role"] == "system":
             langchain_messages.append(SystemMessage(content=text))
+
+    # Bind the session artifact directory so tools can find it without changing signatures.
+    _artifact_dir_var.set(artifacts_dir)
 
     # Initialize accumulation strings
     full_answer = ""
