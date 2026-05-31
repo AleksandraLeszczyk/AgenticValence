@@ -10,12 +10,9 @@ from langchain_core.messages import SystemMessage
 import pandas as pd
 import plotly.express as px
 
-from agentic_valence.config import CONFIG
+from agentic_valence.config import settings
 
 logger = logging.getLogger()
-
-# In a real environment, this URL would point to your actual MCP server
-MODEL = CONFIG["MODEL_VIZ_CREATOR"]
 
 
 PROMPT_VIZ_CREATOR = """
@@ -142,7 +139,11 @@ def create_interactive_plot(
 #     raise NotImplementedError
 
 
-model_viz_creator = ChatOpenAI(temperature=0, model_name=MODEL)
+model_viz_creator = ChatOpenAI(
+    temperature=0,
+    model_name=settings.model_viz_creator,
+    api_key=settings.openai_key,
+)
 
 viz_creator = create_agent(
     model_viz_creator,

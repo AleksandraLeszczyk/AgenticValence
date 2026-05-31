@@ -2,12 +2,12 @@ import os
 import shutil
 
 import gradio as gr
-from dotenv import load_dotenv
 
 from agentic_valence.main import chat_with_principal_investigator
 from agentic_valence.style.html_elements import CSS_STYLE_HEADER
 
-load_dotenv(override=True)
+# Importing agentic_valence.config (transitively via main) loads the .env file
+# and validates settings, so no explicit load_dotenv() is needed here.
 
 
 def main():

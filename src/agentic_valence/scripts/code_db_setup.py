@@ -10,10 +10,9 @@ from langchain_text_splitters import MarkdownHeaderTextSplitter, MarkdownTextSpl
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 
-from dotenv import load_dotenv
+from agentic_valence.config import settings
 
 logger = logging.getLogger()
-load_dotenv(override=True)
 
 
 def fetch_code_and_docs(dir_path: str | Path | None = None) -> list[Document]:
@@ -79,8 +78,8 @@ def create_vector_database(chunks: list[Document], db_name: str|None = None) -> 
         Chroma: vector database
     """
     if not db_name:
-        db_name = os.environ.get("db_name", "code_db")
-    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+        db_name = settings.code_db_name
+    embeddings = HuggingFaceEmbeddings(model_name=settings.model_embedding_hf)
     if os.path.exists(db_name):
         Chroma(persist_directory=db_name, embedding_function=embeddings).delete_collection()
         logger.info("Database detected in %s. Deleting old items." % db_name)
@@ -101,7 +100,6 @@ def create_vector_database(chunks: list[Document], db_name: str|None = None) -> 
 
 
 if __name__ == "__main__":
-    load_dotenv(override=True)
     documents = fetch_code_and_docs()
     chunks = create_chunks(documents)
     create_vector_database(chunks)

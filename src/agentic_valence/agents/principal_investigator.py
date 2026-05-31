@@ -4,16 +4,14 @@ from langchain.tools import tool
 from langchain.agents import create_agent
 from langchain.messages import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
-from dotenv import load_dotenv
 
 from agentic_valence.agents.literature_review import literature_reviewer
 from agentic_valence.agents.scientific_computation import scientific_computing
 from agentic_valence.agents.viz_creator import viz_creator
-from agentic_valence.config import CONFIG
+from agentic_valence.config import settings
 
 
 logger = logging.getLogger()
-load_dotenv(override=True)
 
 
 PI_PROMPT = """You are a principal investigator in a research project in area of quantum chemistry. 
@@ -81,7 +79,8 @@ def VizCreator(question: str) -> list[str]:
 
 
 model_principal_investigator = ChatOpenAI(
-    model=CONFIG["MODEL_PRINCIPAL_INVESTIGATOR"]
+    model=settings.model_principal_investigator,
+    api_key=settings.openai_key,
 )
 principal_investigator = create_agent(
     model_principal_investigator,
