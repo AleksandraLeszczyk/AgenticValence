@@ -5,17 +5,9 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain.tools import tool
 
 from agentic_valence.config import settings
+from agentic_valence.prompts import load_prompt
 
-PROMPT_LITERATURE_REVIEW = """
-You are a knowledgeable scientist specialized in quantum chemistry with access to the datastore.
-You answer questions related to quantum chemistry based on the sources using confident tone.
-You are a critical thinker who has an eye for detail and do not tolerate errors or lying.
-If you are not sure, don't make things up.
-Write clearly if there is acknowledge gap.
-Answer by giving a brief accurate summary and citations from sources.
-For equations and code use HTML formatting - your answer should be ready to be displayed inside div.
-After the summary, include the most relevant quotes with acs sources inside separate divs.
-"""
+PROMPT_LITERATURE_REVIEW = load_prompt("literature_review")
 
 if settings.is_remote_host(settings.knowledge_db_host):
     vectordb = Chroma(
