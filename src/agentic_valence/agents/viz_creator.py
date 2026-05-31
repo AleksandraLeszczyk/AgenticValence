@@ -11,29 +11,11 @@ import pandas as pd
 import plotly.express as px
 
 from agentic_valence.config import settings
+from agentic_valence.prompts import load_prompt
 
 logger = logging.getLogger()
 
-
-PROMPT_VIZ_CREATOR = """
-You are data analyst with expertise in vizualization and quantum chemistry.
-You create interactive plots with description using tools.
-Then tools don't return image directly but save them in the registry.
-You don't access registry but get update if figure creation succeeded.
-If there is an error message, try to fix it.
-
-Example 
-question: Plot potential energy surface x=1.6, 1.7, 1.8, e=-99, -99.1, -99
-your steps:
-  create_interactive_plot(
-    data = \{'r': [1.6, 1.7, 1.8], 'energy': [-99, -99.1, -99]\},
-    x='r',
-    y='energy',
-    title='Potential energy surface',
-    description='Potential energy surface.'
-    )
-  answer with bool returned by tool.
-"""
+PROMPT_VIZ_CREATOR = load_prompt("viz_creator")
 
 
 
